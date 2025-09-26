@@ -26,7 +26,7 @@ export class WalletService {
         const exchangeRateObj = await exchangeRateResp.json();  
         exchangeRate = (exchangeRateObj.result === "success" && exchangeRateObj.conversion_rates?.[currency]) || exchangeRate
       }
-      EGPAmount = amount * exchangeRate;
+      EGPAmount = amount / exchangeRate;
     }
 
     const session = await this.transactionManager.startTransaction();
