@@ -6,6 +6,9 @@ export class Wallet {
 
   @Prop({ required: true, default: 0 })
   balance: number;
+
+  @Prop({ required: false, default: "EGP" })
+  currency: string;
 }
 
 export type WalletDocument = Wallet & Document;

@@ -13,7 +13,7 @@ export class WalletController {
   }
 
   @Post('transaction')
-  appendTransaction(@Body() body: appendTransactionDto){ /// add DTO
+  appendTransaction(@Body() body: appendTransactionDto){
     return this.walletService.appendTransaction(body)
   }
 

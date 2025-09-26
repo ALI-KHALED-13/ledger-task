@@ -2,6 +2,8 @@ import { Global, Logger, Module, OnModuleInit } from '@nestjs/common';
 import { InjectConnection, MongooseModule } from '@nestjs/mongoose';
 import { Connection } from 'mongoose';
 import { TransactionManager } from './transaction-manager.service';
+import { DatabaseSeeder } from './database-seeder.service';
+import { Wallet, WalletSchema } from 'src/shared/schemas/wallet.schema';
 
 
 let AppOdmModule: any = MongooseModule;
@@ -10,8 +12,11 @@ let AppOdmModule: any = MongooseModule;
 @Module({
   imports: [
     AppOdmModule.forRoot('mongodb://localhost:27017/ledger'),
+    MongooseModule.forFeature([
+      { name: Wallet.name, schema: WalletSchema }
+    ]),
   ],
-  providers: [TransactionManager],
+  providers: [TransactionManager, DatabaseSeeder],
   exports: [AppOdmModule, TransactionManager],
 })
 export class DatabaseModule implements OnModuleInit {

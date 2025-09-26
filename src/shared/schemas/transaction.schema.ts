@@ -21,7 +21,8 @@ export class Transaction {
   @Prop({ 
     required: true,
     length: 3,
-    uppercase: true
+    uppercase: true,
+    enum: "EGP"
   })
   currency: string;
 }
