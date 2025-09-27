@@ -1,8 +1,8 @@
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
-import { ISessionManager } from "src/shared/processors/database/transaction-manager.service";
-import { Transaction, TransactionDocument } from "src/shared/schemas/transaction.schema";
-import { Wallet, WalletDocument } from "src/shared/schemas/wallet.schema";
+import { ISessionManager } from "../shared/processors/database/transaction-manager.service";
+import { Transaction, TransactionDocument } from "../shared/schemas/transaction.schema";
+import { Wallet, WalletDocument } from "../shared/schemas/wallet.schema";
 import { Injectable } from "@nestjs/common";
 import { appendTransactionDto } from "./dto/append-transaction-dto";
 

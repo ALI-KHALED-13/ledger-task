@@ -1,9 +1,8 @@
 import { BadRequestException, Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
 import { appendTransactionDto } from './dto/append-transaction-dto';
-import { TransactionManager } from 'src/shared/processors/database/transaction-manager.service';
+import { TransactionManager } from '../shared/processors/database/transaction-manager.service';
 import { WalletRepository } from './wallet.repository';
-import { TransactionTypes } from 'src/configs/enums';
-import { TransactionDocument } from 'src/shared/schemas/transaction.schema';
+import { TransactionTypes } from '../configs/enums';
 
 @Injectable()
 export class WalletService {

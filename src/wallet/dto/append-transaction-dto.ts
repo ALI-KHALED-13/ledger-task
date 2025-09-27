@@ -1,5 +1,5 @@
 import { IsEnum, IsNumber, IsString, Length } from "class-validator";
-import { TransactionTypes } from "src/configs/enums";
+import { TransactionTypes } from "../../configs/enums";
 
 export class appendTransactionDto {
   @IsString()
