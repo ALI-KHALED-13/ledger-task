@@ -17,9 +17,10 @@ export class WalletService {
     if (!wallet){
       throw new NotFoundException("not found wallet, make sure seeding step took place")
     }
-    return (wallet.balance + " " + wallet.currency);
+    return {success: true, data: (wallet.balance + " " + wallet.currency)};
   }
 
+  // AI sugessted @WithTransaction() decorator here for cleaner code and isolation of session managment logic, but not gonna add it since I didn't recognize this pattern before, it's interesting tho
   async appendTransaction(body: appendTransactionDto){
     const {transactionId, type, amount, currency: originalCurrency} = body;
 
@@ -68,7 +69,7 @@ export class WalletService {
 
       await this.transactionManager.commitTransaction(session)
 
-      return createdTransaction
+      return {success: true, data: createdTransaction} 
     } catch(err){
       await this.transactionManager.rollbackTransaction(session);
       console.error(err) // sentry or logging service

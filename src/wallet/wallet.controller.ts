@@ -8,7 +8,7 @@ export class WalletController {
   constructor(private walletService: WalletService){}
 
   @Get('balance')
-  getAll(){
+  getBalance(){
     return this.walletService.getBalance()
   }
 
