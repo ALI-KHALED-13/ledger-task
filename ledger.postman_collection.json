@@ -1,0 +1,87 @@
+{
+	"info": {
+		"_postman_id": "b96f0c44-0149-4f9a-9dbb-5d0b3a2c91f1",
+		"name": "ledger",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19029886",
+		"_collection_link": "https://comrades-13.postman.co/workspace/Team-Workspace~3e5a81e7-9e13-468b-851a-ed5cd19a7acb/collection/19029886-b96f0c44-0149-4f9a-9dbb-5d0b3a2c91f1?action=share&source=collection_link&creator=19029886"
+	},
+	"item": [
+		{
+			"name": "get blaance",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/wallet/balance",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"wallet",
+						"balance"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "append-transaction",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"transactionId\": \"abcq\",\r\n    \"type\": \"DEPOSIT\",\r\n    \"amount\": 55,\r\n    \"currency\": \"SAR\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/wallet/transaction",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"wallet",
+						"transaction"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "all transactions",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"transactionId\": \"abc\",\r\n    \"type\": \"DEPOSIT\",\r\n    \"amount\": 55,\r\n    \"currency\": \"USD\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/wallet/transactions",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"wallet",
+						"transactions"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

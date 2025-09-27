@@ -16,7 +16,7 @@ export class Transaction {
   })
   type: TransactionTypes;
 
-  @Prop({ required: true, min: 0, immutable: true})
+  @Prop({ required: true, immutable: true})
   amount: number;
 
   @Prop({ 

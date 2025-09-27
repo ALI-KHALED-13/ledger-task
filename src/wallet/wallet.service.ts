@@ -19,6 +19,13 @@ export class WalletService {
     return {success: true, data: (wallet.balance + " " + wallet.currency)};
   }
 
+  async getAllTransactions(){
+    return {
+      success: true,
+      data: await this.walletRepository.getAllTransactions()
+    }
+  }
+
   // AI sugessted @WithTransaction() decorator here for cleaner code and isolation of session managment logic, but not gonna add it since I didn't recognize this pattern before, it's interesting tho
   async appendTransaction(body: appendTransactionDto){
     const {transactionId, type, amount, currency: originalCurrency} = body;

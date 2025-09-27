@@ -11,10 +11,10 @@ import { MongoMemoryReplSet } from 'mongodb-memory-server';
   imports: [
     MongooseModule.forRootAsync({
       useFactory: async () => {
-        let mongoUri = 'mongodb://localhost:27017/ledger';
+        let mongoUri = process.env.MONGO_URI;
 
         if (process.env.NODE_ENV !== 'production') { // only run it locally
-          const replSet = await MongoMemoryReplSet.create({
+          const replSet = await MongoMemoryReplSet.create({ // mongodb sessions work only with replica sets, so connecting to local Db Server would result in a failure
             replSet: { count: 1, storageEngine: 'wiredTiger' },
           });
           mongoUri = replSet.getUri('ledger');

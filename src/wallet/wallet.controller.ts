@@ -12,6 +12,11 @@ export class WalletController {
     return this.walletService.getBalance()
   }
 
+  @Get('transactions') // endpoint for convenience and manual testing since locally the db is MongoMemoryReplSet and would be wipped off upon restarting server (MONGODB SESSIONS)
+  getAllTransactions(){ 
+    return this.walletService.getAllTransactions()
+  }
+
   @Post('transaction')
   appendTransaction(@Body() body: appendTransactionDto){
     return this.walletService.appendTransaction(body)

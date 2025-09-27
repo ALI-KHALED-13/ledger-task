@@ -32,5 +32,7 @@ export class WalletRepository {
     return transaction;
   }
 
-
+  async getAllTransactions(session?: ISessionManager){
+    return await this.transactionModel.find({}, null, {session}) // there supposed to be pagination here but this is done for convenience
+  }
 }
