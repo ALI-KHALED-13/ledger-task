@@ -1,53 +1,81 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
 import { appendTransactionDto } from './dto/append-transaction-dto';
-import { TransactionManager } from 'src/shared/processors/databse/transaction-manager.service';
+import { TransactionManager } from 'src/shared/processors/database/transaction-manager.service';
+import { WalletRepository } from './wallet.repository';
+import { TransactionTypes } from 'src/configs/enums';
+import { TransactionDocument } from 'src/shared/schemas/transaction.schema';
 
 @Injectable()
 export class WalletService {
   constructor(
     private readonly transactionManager: TransactionManager,
-    /* private readonly walletRepository: WalletRepository,
-    private readonly transactionRepository: TransactionRepository, */
+    private readonly walletRepository: WalletRepository,
   ) {}
   
   async getBalance(){
-    return 0;
+    const wallet = await this.walletRepository.getDefaultWallet();
+    if (!wallet){
+      throw new NotFoundException("not found wallet, make sure seeding step took place")
+    }
+    return (wallet.balance + " " + wallet.currency);
   }
 
   async appendTransaction(body: appendTransactionDto){
-    const {type, amount, currency} = body;
+    const {transactionId, type, amount, currency: originalCurrency} = body;
+
+    if (
+      type === TransactionTypes.DEPOSIT && amount < 0 ||
+      type === TransactionTypes.WITHDRAW && amount > 0
+    ) { // to be future proof in case req body logic changes
+      throw new BadRequestException("transaction body is inconsistent")
+    }
 
     let EGPAmount = amount;
 
-    if (currency !== "EGP") {
-      let exchangeRate = 0.04; // some base xchange rate, EGP is not doing good
+    if (originalCurrency !== "EGP") {
+      let exchangeRate = 0.04; // some base xchange rate, EGP is not doing well
       const exchangeRateResp = await fetch("https://v6.exchangerate-api.com/v6/2618b005f15b5f68f6c7cda8/latest/EGP", {headers: {"Content-Type": "application/JSON"}});
       if (exchangeRateResp.ok){
         const exchangeRateObj = await exchangeRateResp.json();  
-        exchangeRate = (exchangeRateObj.result === "success" && exchangeRateObj.conversion_rates?.[currency]) || exchangeRate
+        exchangeRate = (exchangeRateObj.result === "success" && exchangeRateObj.conversion_rates?.[originalCurrency]) || exchangeRate
       }
       EGPAmount = amount / exchangeRate;
     }
 
     const session = await this.transactionManager.startTransaction();
     try {
-      // check if transactionId is already added to db, if yes throw an error
-      // get user wallet
-      // check type withdrawl vs deposit (and amount +ve or -ve as task not clear if "type" will decide it too)
-      // if deposit just add
-      // if withdrawl you gotta check for insuffiecent balance first, no suffiecient throw an error
-      // add transaction
-      // update balance
+      const wallet = await this.walletRepository.getDefaultWallet(session);
+      if (!wallet){
+        throw new NotFoundException("Not found wallet, make sure seeding step took place")
+      }
+      const wouldBalanceGoNegative =  type === TransactionTypes.WITHDRAW && (wallet.balance + EGPAmount) < 0;
+      if (wouldBalanceGoNegative){
+        throw new UnprocessableEntityException("Balance insufficient to exeute this withdraw request")
+      }
 
+      const createdTransaction = await this.walletRepository.appendTransaction({
+        transactionId,
+        amount: +(EGPAmount.toFixed(2)), // to avoid percision problems
+        type,
+        originalCurrency,
+        currency: "EGP",
+      }, session);
+
+      await this.walletRepository.updateWalletBalance(
+        +(wallet.balance + EGPAmount).toFixed(2), // to avoid percision problems
+        session
+      )
+
+      await this.transactionManager.commitTransaction(session)
+
+      return createdTransaction
     } catch(err){
       await this.transactionManager.rollbackTransaction(session);
-
-      throw new err
+      console.error(err) // sentry or logging service
+      throw  err
     }finally {
       await this.transactionManager.releaseTransaction(session);
     }
-    
-    return 'new transaction added or otherwise'
   }
 
 }

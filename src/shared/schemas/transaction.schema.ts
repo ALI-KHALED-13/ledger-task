@@ -5,7 +5,7 @@ import { TransactionTypes } from 'src/configs/enums';
 
 @Schema({ timestamps: true })
 export class Transaction {
-  @Prop({ required: true, unique: true })
+  @Prop({ required: true, unique: true})
   transactionId: string;
 
   @Prop({ 
@@ -15,7 +15,7 @@ export class Transaction {
   })
   type: TransactionTypes;
 
-  @Prop({ required: true })
+  @Prop({ required: true, min: 0})
   amount: number;
 
   @Prop({ 
@@ -25,6 +25,9 @@ export class Transaction {
     enum: "EGP"
   })
   currency: string;
+
+  @Prop({ required: false, default: "EGP" }) // not required by task but i think it would be useful for statistic
+  originalCurrency: string;
 }
 
 export type TransactionDocument = Transaction & Document;

@@ -1,12 +1,12 @@
-import { IsEnum, IsNumber, IsString, IsUUID, Length } from "class-validator";
+import { IsEnum, IsNumber, IsString, Length } from "class-validator";
 import { TransactionTypes } from "src/configs/enums";
 
 export class appendTransactionDto {
-  @IsUUID()
+  @IsString()
   transactionId: string;
 
   @IsEnum(TransactionTypes)
-  type: string;
+  type: TransactionTypes;
 
   @IsNumber()
   amount: number;

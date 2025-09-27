@@ -4,6 +4,7 @@ import { WalletService } from './wallet.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Transaction, TransactionSchema } from 'src/shared/schemas/transaction.schema';
 import { Wallet, WalletSchema } from 'src/shared/schemas/wallet.schema';
+import { WalletRepository } from './wallet.repository';
 
 @Module({
   imports: [
@@ -13,6 +14,6 @@ import { Wallet, WalletSchema } from 'src/shared/schemas/wallet.schema';
     ])
   ],
   controllers: [WalletController],
-  providers: [WalletService]
+  providers: [WalletService, WalletRepository]
 })
 export class WalletModule {}
