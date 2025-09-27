@@ -3,6 +3,7 @@
 ## Note From Developer
 - to run the project locally, clone the repo and npm install
 - installation *will take* longer than usual cause of the dev dependency mongodb-memory-server which allows to test session/transaction dependent operations with mongodb, essentially used in this solution
+- `npm run start` or `npm run start:dev` and the server should start running
 - There is a file at the root called ledger.postman_collection.json, this file can  be imported to your postman to test the endpoints with
 
 Build a **Ledger / Wallet Service** in **NestJS** with 1 endpoint:
